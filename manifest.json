@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Vertical Tab",
+    "version": "1.0",
+    "description": "Display a vertical with a list of open tabs.",
+    "action": {
+      "default_popup": "sidebar.html"
+    },
+    "permissions": [
+      "tabs"
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ]
+  }
+  

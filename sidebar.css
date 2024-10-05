@@ -1,0 +1,56 @@
+body {
+    width: 800px;
+    height: 600px;
+    padding: 3px;
+    background-color: #f4f4f4;
+}
+
+
+.tab {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tab:hover {
+    background-color: #e0e0e0;
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.favicon {
+    width: 1em;
+    height: 1em;
+    margin-right: 10px;
+}
+
+.delete-btn .delete-icon {
+    display: none;
+    /* デフォルトは非表示 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 10px;
+}
+
+.tab-item:hover .delete-btn .delete-icon {
+    display: block;
+    /* ホバー時に表示 */
+}
+
+.delete-btn .delete-icon {
+    fill: red;
+    transition: fill 0.2s;
+}
+
+.delete-btn:hover .delete-icon {
+    fill: darkred;
+}
