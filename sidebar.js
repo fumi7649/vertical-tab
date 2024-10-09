@@ -25,13 +25,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // タブを取得して一覧に表示する関数
     function displayTabs(tabs) {
         tabContainer.innerHTML = '';
-        tabs.forEach(tab => {
+        tabs.forEach((tab, index) => {
             const tabElement = document.createElement('a');
             tabElement.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center', 'tab-item');
             tabElement.href = "#";
+            tabElement.draggable = true;
+            tabElement.dataset.index = index;
             tabElement.addEventListener('click', () => {
                 chrome.tabs.update(tab.id, { active: true });
             });
+            // moveTab
+            tabElement.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', index); // ドラッグされたタブのインデックスを保持
+            });
+
+            // ドロップ時のイベント
+            tabElement.addEventListener('dragover', (e) => {
+                e.preventDefault(); // デフォルトの動作を無効化
+            });
+
+            tabElement.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedIndex = e.dataTransfer.getData('text/plain'); // ドラッグされたタブのインデックスを取得
+                const targetIndex = tabElement.dataset.index; // ドロップされたタブのインデックスを取得
+
+                // タブのインデックスを更新
+                moveTab(draggedIndex, targetIndex);
+            });
+
 
 
             const favIcon = document.createElement('img');
@@ -69,9 +90,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 初回に全タブを取得して表示
-    chrome.tabs.query({}, function (tabs) {
-        allTabs = tabs;
-        displayTabs(allTabs);
+    chrome.windows.getCurrent({}, function (currentWindow) {
+        chrome.tabs.query({ windowId: currentWindow.id }, function (tabs) {
+            allTabs = tabs;
+            displayTabs(allTabs);
+        });
     });
 
     // 検索ボックスに入力があった場合のフィルタリング処理
@@ -81,4 +104,19 @@ document.addEventListener('DOMContentLoaded', function () {
         displayTabs(filteredTabs);
     });
 
+    function moveTab(draggedIndex, targetIndex) {
+        draggedIndex = parseInt(draggedIndex);
+        targetIndex = parseInt(targetIndex);
+
+        if (draggedIndex !== targetIndex) {
+            chrome.tabs.move(allTabs[draggedIndex].id, { index: targetIndex }, function () {
+                // タブの並び順が変更されたら再描画
+                displayTabsForCurrentWindow();
+            });
+        }
+    }
+    
+    chrome.tabs.onMoved.addListener(function () {
+        location.reload(); // 拡張機能のポップアップをリロード
+      });
 });
