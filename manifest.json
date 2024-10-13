@@ -1,16 +1,22 @@
 {
-    "manifest_version": 3,
-    "name": "Vertical Tab",
-    "version": "1.0",
-    "description": "Display a vertical with a list of open tabs.",
-    "action": {
-      "default_popup": "sidebar.html"
-    },
-    "permissions": [
-      "tabs"
-    ],
-    "host_permissions": [
-      "<all_urls>"
-    ]
+  "manifest_version": 3,
+  "name": "Vertical Tab",
+  "version": "1.0",
+  "description": "Display a vertical with a list of open tabs.",
+  "action": {
+    "default_popup": "sidebar.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "tabs",
+    "tabGroups"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
   }
-  
+}
