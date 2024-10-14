@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function createAndAppendTabElement(tabs, container, group) {
         const collapse = document.createElement('div');
         collapse.classList.add('accordion-collapse', 'collapse');
+        if (group && !group.collapsed) {
+            // ひらいてたら開いた状態にする
+            collapse.classList.add('show');
+        }
         collapse.id = "collapseGroup" + group.id;
 
         tabs.forEach((tab) => {
@@ -102,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.classList.add('accordion-button');
         button.setAttribute('type', 'button');
         button.setAttribute('data-bs-toggle', "collapse");
-        button.setAttribute('data-bs-target', "#collapseGroup" + group.id); // 修正: IDを正しく参照
+        button.setAttribute('data-bs-target', "#collapseGroup" + group.id);
         button.setAttribute('aria-expanded', 'true');
         button.setAttribute('aria-controls', "collapseGroup" + group.id); // 修正: IDを正しく参照
         button.textContent = group.title;
@@ -164,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 allTabs = tabs;
                 chrome.runtime.sendMessage({ action: 'getTabGroups', windowId: currentWindow.id }, function (response) {
                     allGroups = response.groups;
-                    console.log(tabs);
                     displayTabs(allGroups, tabs);
                 });
             });
@@ -193,7 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
             allTabs = tabs;
             chrome.runtime.sendMessage({ action: 'getTabGroups', windowId: currentWindow.id }, function (response) {
                 allGroups = response.groups;
-                console.log(tabs);
                 displayTabs(allGroups, tabs);
             });
         });
